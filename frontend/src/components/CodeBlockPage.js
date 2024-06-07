@@ -13,6 +13,8 @@ const CodeBlockPage = () => {
     const [code, setCode] = useState('');
     const [showSmiley, setShowSmiley] = useState(false);
     const textAreaRef = useRef(null);
+    const [solutoin, setSolution] = useState('');
+    const [showSolution, setShowSolution] = useState(false);
 
     useEffect(() => {
         fetch(`/api/codeBlocks/${id}`)
@@ -20,6 +22,7 @@ const CodeBlockPage = () => {
             .then(data => {
                 setCodeBlock(data);
                 setCode(data.code);
+                setSolution(data.solution);
             });
 
         socket.emit('joinCodeBlock', { codeBlockId: id, role });
@@ -49,7 +52,7 @@ const CodeBlockPage = () => {
         socket.emit('codeChange', { codeBlockId: id, newCode });
     };
     
-
+        
     return (
         <div>
             <h1>{codeBlock ? codeBlock.title : 'Loading...'}</h1>
@@ -77,11 +80,15 @@ const CodeBlockPage = () => {
                         )}
                     </div>
                 )}
-
-            <button onClick={() => setRole(role === 'mentor' ? 'student' : 'mentor')}>
-                Switch to {role === 'mentor' ? 'student' : 'mentor'}
-            </button>
+            
             <button onClick={() => navigate('/')}>Return to Lobby</button>
+            <button onClick={() => setShowSolution(!showSolution)}>Show/ Hide Solution</button>
+            {showSolution && (
+                <div>
+                    <h2>Solution</h2>
+                    <Highlight className="javascript">{solutoin}</Highlight>
+                </div>
+            )}
         </div>
     );
 };
