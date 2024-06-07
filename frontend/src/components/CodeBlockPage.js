@@ -9,7 +9,7 @@ const CodeBlockPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [codeBlock, setCodeBlock] = useState(null);
-    const [role, setRole] = useState('student');
+    const [role, setRole] = useState('mentor');
     const [code, setCode] = useState('');
     const [showSmiley, setShowSmiley] = useState(false);
     const textAreaRef = useRef(null);
@@ -32,11 +32,16 @@ const CodeBlockPage = () => {
             setShowSmiley(true);
         });
 
+        socket.on('roleAssigned', (assignedRole) => {
+            setRole(assignedRole);
+        });
         return () => {
             socket.off('codeUpdate');
             socket.off('solutionMatched');
+            socket.off('roleAssigned');
+            socket.emit('leaveCodeBlock', { codeBlockId: id, role });
         };
-    }, [id, role]);
+    }, [id,role]);
 
     const handleCodeChange = (event) => {
         const newCode = event.target.value;
