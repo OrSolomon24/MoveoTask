@@ -2,6 +2,7 @@ const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 let codeBlocksCollection;
+let mentorStudentCollection;
 
 const connectToDatabase = async () => {
     const client = new MongoClient(process.env.MONGODB_URI);
@@ -10,6 +11,8 @@ const connectToDatabase = async () => {
         console.log('Connected to MongoDB');
         const db = client.db('MoveoTask');
         codeBlocksCollection = db.collection('codeBlocks');
+        mentorStudentCollection = db.collection('mentorStudent');
+        console.log('Collections initialized');
     } catch (err) {
         console.error('Failed to connect to MongoDB', err);
         process.exit(1);
@@ -17,11 +20,10 @@ const connectToDatabase = async () => {
 };
 
 const getCodeBlocksCollection = () => codeBlocksCollection;
+const getMentorStudentCollection = () => mentorStudentCollection;
 
 module.exports = {
     connectToDatabase,
-    getCodeBlocksCollection
+    getCodeBlocksCollection,
+    getMentorStudentCollection
 };
-
-
-// 5YzwR9IOhAUlOgdo orsolomon24
