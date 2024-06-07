@@ -9,12 +9,20 @@ const { handleSocketConnection } = require('./sockets/codeBlockHandlers');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+const cors = require('cors');
 
 app.use(express.json());
 
 io.on('connection', handleSocketConnection);
 
 app.use('/api/codeBlocks', codeBlocksRoutes);
+
+const corsOptions = {
+    origin: '*'
+  };
+app.use(cors(corsOptions));
+
+app.use(express.json());
 
 const startServer = async () => {
     await connectToDatabase();
