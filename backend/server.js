@@ -12,12 +12,10 @@ const io = socketIo(server);
 
 app.use(express.json());
 
-// Route for code blocks
-app.use('/api/codeBlocks', codeBlocksRoutes);
-
 io.on('connection', handleSocketConnection);
 
-// Start the server
+app.use('/api/codeBlocks', codeBlocksRoutes);
+
 const startServer = async () => {
     await connectToDatabase();
 
