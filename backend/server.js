@@ -1,8 +1,9 @@
-// /backend/server.js
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const codeBlocks = require('./data/codeBlocks');
+require('dotenv').config();
+const { connectToDatabase, getCodeBlocksCollection } = require('./data/database');
+const codeBlocksRoutes = require('./routes/codeBlockRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -15,7 +16,9 @@ let connections = {};
 io.on('connection', (socket) => {
     console.log('New client connected');
 
-    socket.on('joinCodeBlock', ({ codeBlockId, role }) => {
+    socket.on('joinCodeBlock', async ({ codeBlockId, role }) => {
+        const codeBlocksCollection = getCodeBlocksCollection();
+
         if (!connections[codeBlockId]) {
             connections[codeBlockId] = { mentor: null, student: null };
         }
@@ -29,14 +32,14 @@ io.on('connection', (socket) => {
         socket.join(codeBlockId);
 
         if (role === 'student' && connections[codeBlockId].mentor) {
-            socket.emit('codeUpdate', codeBlocks.find(block => block.id == codeBlockId).code);
+            const codeBlock = await codeBlocksCollection.findOne({ id: parseInt(codeBlockId) });
+            socket.emit('codeUpdate', codeBlock.code);
         }
     });
 
-    socket.on('codeChange', ({ codeBlockId, newCode }) => {
-        const codeBlock = codeBlocks.find(block => block.id == codeBlockId);
-        codeBlock.code = newCode;
-
+    socket.on('codeChange', async ({ codeBlockId, newCode }) => {
+        const codeBlocksCollection = getCodeBlocksCollection();
+        const codeBlock = await codeBlocksCollection.findOne({ id: parseInt(codeBlockId) });
         if (connections[codeBlockId].mentor) {
             connections[codeBlockId].mentor.emit('codeUpdate', newCode);
         }
@@ -58,19 +61,14 @@ io.on('connection', (socket) => {
     });
 });
 
-app.get('/api/codeBlocks', (req, res) => {
-    res.json(codeBlocks.map(block => ({ id: block.id, title: block.title })));
-});
+app.use('/api/codeBlocks', codeBlocksRoutes);
 
-app.get('/api/codeBlocks/:id', (req, res) => {
-    const codeBlock = codeBlocks.find(block => block.id == req.params.id);
-    if (codeBlock) {
-        res.json(codeBlock);
-    } else {
-        res.status(404).send('Code block not found');
-    }
-});
+const startServer = async () => {
+    await connectToDatabase();
 
-server.listen(5000, () => {
-    console.log('Server is running on port 5000');
-});
+    server.listen(5000, () => {
+        console.log('Server is running on port 5000');
+    });
+};
+
+startServer();
