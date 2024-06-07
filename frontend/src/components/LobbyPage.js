@@ -7,22 +7,23 @@ const LobbyPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch('/api/codeBlocks')
-            .then(response => {
+        const fetchCodeBlocks = async () => {
+            try {
+                const response = await fetch('/api/codeBlocks');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
-            })
-            .then(data => {
+                const data = await response.json();
                 setCodeBlocks(data);
                 setLoading(false);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
                 setError(error);
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchCodeBlocks();
     }, []);
 
     if (loading) {

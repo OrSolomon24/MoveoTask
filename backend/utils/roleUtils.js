@@ -1,26 +1,36 @@
 const getRoleForUser = async (codeBlockId, ip, mentorStudentCollection) => {
-    let role = 'mentor';
-    const existingRecord = await mentorStudentCollection.findOne({ blockId: codeBlockId });
+    try {
+        let role = 'mentor';
+        const existingRecord = await mentorStudentCollection.findOne({ blockId: codeBlockId });
 
-    if (existingRecord) {
-        role = 'student';
+        if (existingRecord) {
+            role = 'student';
+        }
+
+        const existingStudent = await mentorStudentCollection.findOne({
+            blockId: codeBlockId,
+            ip: ip,
+            role: 'student'
+        });
+
+        return { role, existingStudent };
+    } catch (error) {
+        console.error('Error in getRoleForUser:', error);
+        throw new Error('Failed to get role for user');
     }
-
-    const existingStudent = await mentorStudentCollection.findOne({
-        blockId: codeBlockId,
-        ip: ip,
-        role: 'student'
-    });
-
-    return { role, existingStudent };
 };
 
 const insertMentorStudentRecord = async (codeBlockId, ip, role, mentorStudentCollection) => {
-    await mentorStudentCollection.insertOne({
-        blockId: codeBlockId,
-        ip: ip,
-        role: role
-    });
+    try {
+        await mentorStudentCollection.insertOne({
+            blockId: codeBlockId,
+            ip: ip,
+            role: role
+        });
+    } catch (error) {
+        console.error('Error in insertMentorStudentRecord:', error);
+        throw new Error('Failed to insert mentor-student record');
+    }
 };
 
 module.exports = {

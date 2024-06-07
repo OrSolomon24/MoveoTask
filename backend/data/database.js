@@ -15,6 +15,7 @@ const connectToDatabase = async () => {
         console.log('Collections initialized');
     } catch (err) {
         console.error('Failed to connect to MongoDB', err);
+        await client.close(); // Ensure the client is closed on error
         process.exit(1);
     }
 };

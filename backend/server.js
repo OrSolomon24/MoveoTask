@@ -9,7 +9,6 @@ const { handleSocketConnection } = require('./sockets/codeBlockHandlers');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const cors = require('cors');
 
 app.use(express.json());
 
@@ -17,19 +16,16 @@ io.on('connection', handleSocketConnection);
 
 app.use('/api/codeBlocks', codeBlocksRoutes);
 
-const corsOptions = {
-    origin: '*'
-  };
-app.use(cors(corsOptions));
-
-app.use(express.json());
-
 const startServer = async () => {
-    await connectToDatabase();
-
-    server.listen(5000, () => {
-        console.log('Server is running on port 5000');
-    });
+    try {
+        await connectToDatabase();
+        server.listen(5000, () => {
+            console.log('Server is running on port 5000');
+        });
+    } catch (error) {
+        console.error('Failed to start server:', error);
+        process.exit(1); // Exit the process with an error code
+    }
 };
 
 startServer();
