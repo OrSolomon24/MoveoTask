@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+const host = process.env.REACT_APP_HOST;
+
 const LobbyPage = () => {
     const [codeBlocks, setCodeBlocks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -9,7 +11,7 @@ const LobbyPage = () => {
     useEffect(() => {
         const fetchCodeBlocks = async () => {
             try {
-                const response = await fetch('https://moveotaskbackend-production.up.railway.app/api/codeBlocks');
+                const response = await fetch(`${host}/api/codeBlocks`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

@@ -1,16 +1,18 @@
+const { UserRole } = require('../constants/constants');
+
 const getRoleForUser = async (codeBlockId, ip, mentorStudentCollection) => {
     try {
-        let role = 'mentor';
+        let role = UserRole.MENTOR;
         const existingRecord = await mentorStudentCollection.findOne({ blockId: codeBlockId });
 
         if (existingRecord) {
-            role = 'student';
+            role = UserRole.STUDENT;
         }
 
         const existingStudent = await mentorStudentCollection.findOne({
             blockId: codeBlockId,
             ip: ip,
-            role: 'student'
+            role: UserRole.STUDENT
         });
 
         return { role, existingStudent };
