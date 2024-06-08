@@ -20,7 +20,7 @@ const CodeBlockPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://moveo-task-backend.vercel.app/api/codeBlocks/${id}`);
+                const response = await fetch(`/api/codeBlocks/${id}`);
                 const data = await response.json();
                 setCodeBlock(data);
                 setCode(data.code);
