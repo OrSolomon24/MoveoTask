@@ -5,11 +5,19 @@ require('dotenv').config();
 const { connectToDatabase } = require('./data/database');
 const codeBlocksRoutes = require('./routes/codeBlockRoutes');
 const { handleSocketConnection } = require('./sockets/codeBlockHandlers');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+const corsOptions = {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true,
+};
 
+app.use(cors(corsOptions));
 app.use(express.json());
 
 io.on('connection', handleSocketConnection);
