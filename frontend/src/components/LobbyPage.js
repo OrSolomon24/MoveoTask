@@ -9,7 +9,7 @@ const LobbyPage = () => {
     useEffect(() => {
         const fetchCodeBlocks = async () => {
             try {
-                const response = await fetch('/api/codeBlocks');
+                const response = await fetch('https://nodejs-serverless-function-express-omega-henna.vercel.app/api/codeBlocks');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
