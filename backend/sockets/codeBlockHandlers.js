@@ -64,6 +64,7 @@ const handleSocketConnection = (socket) => {
     });
 
     socket.on('leaveCodeBlock', async ({ codeBlockId, role }) => {
+        console.log(`Client leaving code block: ${codeBlockId} ${role}`);
         try {
             const mentorStudentCollection = getMentorStudentCollection();
 
@@ -72,19 +73,14 @@ const handleSocketConnection = (socket) => {
                 socket.emit('error', 'Mentor student collection is not initialized');
                 return;
             }
-
-            const matchingDocuments = await mentorStudentCollection.find({
-                blockId: codeBlockId,
+            const roleDocument = {blockId: codeBlockId,
                 role,
-                ip: socket.handshake.address
-            }).toArray();
+                ip: socket.handshake.address};
+
+            const matchingDocuments = await mentorStudentCollection.find(roleDocument).toArray();
             console.log('Matching documents:', matchingDocuments);
 
-            const deletionResult = await mentorStudentCollection.deleteOne({
-                blockId: codeBlockId,
-                role,
-                ip: socket.handshake.address
-            });
+            const deletionResult = await mentorStudentCollection.deleteOne(roleDocument);
 
             if (deletionResult.deletedCount === 1) {
                 console.log(`Client leaving code block: ${codeBlockId} ${role} ${socket.handshake.address}`);

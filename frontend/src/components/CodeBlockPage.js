@@ -51,6 +51,7 @@ const CodeBlockPage = () => {
         socket.on('roleAssigned', handleRoleAssigned);
 
         return () => {
+            console.log('check return');
             socket.off('codeUpdate', handleCodeUpdate);
             socket.off('solutionMatched', handleSolutionMatched);
             socket.off('roleAssigned', handleRoleAssigned);
