@@ -4,7 +4,7 @@ import { UserRole } from '../constants';
 import io from 'socket.io-client';
 import Highlight from 'react-highlight';
 
-const socket = io.connect('https://moveo-task-backend.vercel.app/');
+const socket = io.connect('https://moveotaskbackend-production.up.railway.app/');
 
 const CodeBlockPage = () => {
     const { id } = useParams();
@@ -20,7 +20,7 @@ const CodeBlockPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://moveo-task-backend.vercel.app/api/codeBlocks/${id}`);
+                const response = await fetch(`https://moveotaskbackend-production.up.railway.app/api/codeBlocks/${id}`);
                 const data = await response.json();
                 setCodeBlock(data);
                 setCode(data.code);
