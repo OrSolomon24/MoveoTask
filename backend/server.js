@@ -19,12 +19,13 @@ app.use('/api/codeBlocks', codeBlocksRoutes);
 const startServer = async () => {
     try {
         await connectToDatabase();
-        server.listen(5000, () => {
-            console.log('Server is running on port 5000');
+        const port = process.env.PORT || 5000;
+        server.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
         });
     } catch (error) {
         console.error('Failed to start server:', error);
-        process.exit(1); // Exit the process with an error code
+        process.exit(1);
     }
 };
 
