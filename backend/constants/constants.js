@@ -1,4 +1,3 @@
-// constants.js
 const UserRole = {
     MENTOR: 'mentor',
     STUDENT: 'student'
