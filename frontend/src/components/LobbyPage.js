@@ -9,7 +9,7 @@ const LobbyPage = () => {
     useEffect(() => {
         const fetchCodeBlocks = async () => {
             try {
-                const response = await fetch('http://moveotaskbackend-production.up.railway.app/api/codeBlocks');
+                const response = await fetch('https://moveo-task-backend.vercel.app/api/codeBlocks');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
