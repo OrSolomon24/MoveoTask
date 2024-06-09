@@ -5,6 +5,7 @@ let codeBlocksCollection;
 let mentorStudentCollection;
 
 const connectToDatabase = async () => {
+    console.log('Starting database connection...');
     const client = new MongoClient(process.env.MONGODB_URI);
     try {
         await client.connect();
@@ -15,13 +16,21 @@ const connectToDatabase = async () => {
         console.log('Collections initialized');
     } catch (err) {
         console.error('Failed to connect to MongoDB', err);
-        await client.close(); // Ensure the client is closed on error
+        await client.close(); 
+        console.log('MongoDB client closed due to connection failure');
         process.exit(1);
     }
 };
 
-const getCodeBlocksCollection = () => codeBlocksCollection;
-const getMentorStudentCollection = () => mentorStudentCollection;
+const getCodeBlocksCollection = () => {
+    console.log('Retrieving codeBlocks collection');
+    return codeBlocksCollection;
+};
+
+const getMentorStudentCollection = () => {
+    console.log('Retrieving mentorStudent collection');
+    return mentorStudentCollection;
+};
 
 module.exports = {
     connectToDatabase,

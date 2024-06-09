@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { UserRole } from '../constants';
 import io from 'socket.io-client';
 import Highlight from 'react-highlight';
+import 'highlight.js/styles/default.css';
 
 const host = process.env.REACT_APP_HOST;
 
@@ -53,7 +54,6 @@ const CodeBlockPage = () => {
         socket.on('roleAssigned', handleRoleAssigned);
 
         return () => {
-            console.log('check return');
             socket.off('codeUpdate', handleCodeUpdate);
             socket.off('solutionMatched', handleSolutionMatched);
             socket.off('roleAssigned', handleRoleAssigned);

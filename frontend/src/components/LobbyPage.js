@@ -39,7 +39,7 @@ const LobbyPage = () => {
     return (
         <div>
             <h1>Choose code block</h1>
-            <ul>
+            <ul className='codesList'>
                 {codeBlocks.map(block => (
                     <li key={block.id}>
                         <Link to={`/codeBlock/${block.id}`}>{block.title}</Link>
